@@ -4,10 +4,24 @@ import { z } from 'zod';
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
-  MONGODB_URI: z.string().url().default('mongodb://127.0.0.1:27017/rentos'),
+  MONGODB_URI: z
+    .string()
+    .trim()
+    .min(1)
+    .refine((uri) => /^mongodb(?:\+srv)?:\/\/\S+$/.test(uri), {
+      message: 'Expected a MongoDB connection string.',
+    })
+    .default('mongodb://127.0.0.1:27017/rentos'),
   CORS_ORIGINS: z.string().default('http://localhost:3000,http://localhost:3001'),
   JWT_SECRET: z.string().min(32),
-  PUBLIC_BUSINESS_ID: z.string().uuid().optional(),
+  PUBLIC_BUSINESS_ID: z.preprocess(
+    (value) => {
+      if (typeof value !== 'string') return value;
+      const trimmed = value.trim();
+      return trimmed === '' ? undefined : trimmed;
+    },
+    z.string().uuid().optional(),
+  ),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),

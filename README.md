@@ -4,7 +4,7 @@ The backend is an Express 5 and TypeScript service backed by MongoDB through Mon
 
 ## Getting started
 
-1. Install Node.js 20 or later and run MongoDB as a replica set locally, or obtain a MongoDB Atlas/replica-set connection URI. Booking create/confirm operations require transactions.
+1. Install Node.js 20 or later and run MongoDB as a replica set locally, or obtain a MongoDB Atlas/replica-set connection URI (`mongodb://` or `mongodb+srv://`). Percent-encode reserved characters in the URI username/password, for example `@` as `%40`. Booking create/confirm operations require transactions.
 2. Copy `.env.example` to `.env`; set `MONGODB_URI`, `CORS_ORIGINS`, a unique random `JWT_SECRET` of at least 32 characters, and `PUBLIC_BUSINESS_ID` to the storefront's business UUID. To enable inventory image uploads, also set all three `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` values.
 3. From this directory, run `npm install` and then `npm run dev`.
 4. Check `http://localhost:4000/api/v1/health`. The endpoint returns `503` when MongoDB is unavailable.
